@@ -16,7 +16,7 @@
 
       <n-button circle size="small" class="m-l-auto">
         <template #icon>
-          <n-icon><Search /></n-icon>
+          <n-icon @click="openSearch"><Search /></n-icon>
         </template>
       </n-button>
 
@@ -32,11 +32,13 @@
     </div>
   </div>
   <div class="w-100% h-80px"></div>
+  <IndexComponentsSearchBar ref="serachBarRef" />
 </template>
 <script setup>
 import { NIcon, NButton, NDropdown, NAvatar } from "naive-ui";
 import { Search } from "@vicons/ionicons5";
 const route = useRoute();
+const serachBarRef = ref(null);
 const options = [
   {
     label: "用户中心",
@@ -83,6 +85,9 @@ const types = [
   },
 ];
 
+const openSearch = () => {
+  serachBarRef.value.open();
+};
 const handleOpen = (pathItem) => {
   const { path } = pathItem;
   navigateTo(path);

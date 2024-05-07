@@ -21,9 +21,4 @@
 <script setup>
 useHead({ title: "首页" });
 const { data, pending, error } = await indexDataApi();
-// if (error.value) {
-//   if (process.server) {
-//     throw createError(error.value.data.data);
-//   }
-// }
 </script>

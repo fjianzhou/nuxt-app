@@ -1,6 +1,8 @@
 <template>
   <div class="">
-    <template v-if="pending"> 加载中222。。。。 </template>
+    <template v-if="loading">
+      <slot name="loading"> <LoadingSkeleton /></slot>
+    </template>
     <template v-else-if="error">
       <n-result
         status="500"
@@ -19,5 +21,20 @@
 </template>
 <script setup>
 import { NButton, NResult } from "naive-ui";
-defineProps(["pending", "error"]);
+const loading = ref(false);
+const props = defineProps(["pending", "error"]);
+
+const stop = watchEffect(() => {
+  if (props.pending && !loading.value) {
+    loading.value = true;
+  } else {
+    setTimeout(() => {
+      loading.value = false;
+    }, 1000);
+  }
+});
+
+onUnmounted(() => {
+  stop();
+});
 </script>

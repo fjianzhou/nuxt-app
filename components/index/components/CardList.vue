@@ -6,7 +6,7 @@
     footer-class="!p-0px"
   >
     <template #cover>
-      <img :src="data.cover" class="w-100% h-150px" />
+      <UiImage :src="data.cover" class="w-100% h-150px" />
     </template>
     <div class="pt-2">
       <span class="font-bold w-full truncate font-semibold lh-20px">{{
