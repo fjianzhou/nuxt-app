@@ -1,4 +1,3 @@
-import { PageFooter } from '#build/components';
 <template>
   <div class="body">
     <NavBar></NavBar>

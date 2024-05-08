@@ -19,14 +19,16 @@
           <n-icon @click="openSearch"><Search /></n-icon>
         </template>
       </n-button>
-
-      <n-button strong secondary class="m-10px"> 登录 </n-button>
-      <n-dropdown :options="options">
+      <NuxtLink to="/login" v-if="!user">
+        <n-button strong secondary class="m-10px"> 登录 </n-button>
+      </NuxtLink>
+      <n-dropdown :options="options" v-else>
         <n-avatar
+          class="m-10px"
           round
           size="small"
-          src="empty.png"
-          fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+          :src="user.avatar || '/cheng_girl.png'"
+          fallback-src="/cheng_girl.png"
         />
       </n-dropdown>
     </div>
@@ -37,6 +39,7 @@
 <script setup>
 import { NIcon, NButton, NDropdown, NAvatar } from "naive-ui";
 import { Search } from "@vicons/ionicons5";
+const user = useUser();
 const route = useRoute();
 const serachBarRef = ref(null);
 const options = [
