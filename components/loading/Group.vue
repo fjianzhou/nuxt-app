@@ -14,6 +14,9 @@
         </template>
       </n-result></template
     >
+    <template v-else-if="isEmpty">
+      <Empty />
+    </template>
     <template v-else>
       <slot />
     </template>
@@ -22,7 +25,7 @@
 <script setup>
 import { NButton, NResult } from "naive-ui";
 const loading = ref(false);
-const props = defineProps(["pending", "error"]);
+const props = defineProps(["pending", "error", "isEmpty"]);
 
 const stop = watchEffect(() => {
   if (props.pending && !loading.value) {

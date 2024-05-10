@@ -22,7 +22,7 @@
       <NuxtLink to="/login" v-if="!user">
         <n-button strong secondary class="m-10px"> 登录 </n-button>
       </NuxtLink>
-      <n-dropdown :options="options" v-else>
+      <n-dropdown v-else :options="options" @select="handleSelect">
         <n-avatar
           class="m-10px"
           round
@@ -37,7 +37,13 @@
   <IndexComponentsSearchBar ref="serachBarRef" />
 </template>
 <script setup>
-import { NIcon, NButton, NDropdown, NAvatar } from "naive-ui";
+import {
+  NIcon,
+  NButton,
+  NDropdown,
+  NAvatar,
+  createDiscreteApi,
+} from "naive-ui";
 import { Search } from "@vicons/ionicons5";
 const user = useUser();
 const route = useRoute();
@@ -94,6 +100,24 @@ const openSearch = () => {
 const handleOpen = (pathItem) => {
   const { path } = pathItem;
   navigateTo(path);
+};
+const handleSelect = (key, option) => {
+  switch (key) {
+    case "logout":
+      const { dialog } = createDiscreteApi(["dialog"]);
+      dialog.warning({
+        content: "是否要退出登录？",
+        positiveText: "退出",
+        negativeText: "取消",
+        onPositiveClick: async () => {
+          await userLogout();
+        },
+      });
+      break;
+    case "userInfo":
+      navigateTo("/user/history/1");
+      break;
+  }
 };
 
 const menuIsActive = (item) => {

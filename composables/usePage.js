@@ -4,7 +4,6 @@ export async function usePage(getDateApiCallback) {
   const pageSize = ref(parseInt(route.query?.limit ?? 12));
   const type = ref(route.params.type);
   const page = ref(parseInt(route.params.page));
-
   const { data, pending, error } = await getDateApiCallback({
     type,
     page,
@@ -13,7 +12,11 @@ export async function usePage(getDateApiCallback) {
   });
 
   const rows = computed(() => data.value?.rows ?? []);
-  const pageCount = computed(() => data.value?.count ?? 0);
+  const pageCount = computed(() => {
+    let count = data.value?.count % pageSize.value;
+    let size = Math.floor(data.value?.count / pageSize.value);
+    return count === 0 ? size : size + 1;
+  });
 
   watch(
     () => route.query.keyword,

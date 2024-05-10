@@ -41,7 +41,9 @@
       <n-button quaternary type="primary" size="tiny" @click="chageType">
         {{ type === "login" ? "注册" : "登录" }}</n-button
       >
-      <n-button quaternary type="primary" size="tiny">忘记密码？</n-button>
+      <nuxt-link to="/forget">
+        <n-button quaternary type="primary" size="tiny">忘记密码？</n-button>
+      </nuxt-link>
     </div>
     <div>
       <n-button
@@ -68,6 +70,7 @@
 import { NForm, NFormItem, NInput, NButton, createDiscreteApi } from "naive-ui";
 definePageMeta({
   layout: "login",
+  middleware: ["only-visitor"],
 });
 const title = ref("登录");
 useHead({ title });
@@ -78,7 +81,7 @@ const formRef = ref(null);
 const form = reactive({
   username: "",
   password: "",
-  respassword: "",
+  repassword: "",
 });
 
 const rules = computed(() => {
@@ -121,17 +124,23 @@ const onSubmit = () => {
   formRef.value.validate(async (errors) => {
     if (errors) return;
     loading.value = true;
-    const { data, error } = await loginApi(form);
-    console.log(error.value);
+    const { data, error } =
+      type.value === "login"
+        ? await loginApi({ ...form })
+        : await regUserApi({ ...form });
     loading.value = false;
     if (error.value) return;
     const { message } = createDiscreteApi(["message"]);
-    message.success("登录成功");
-    const token = useCookie("token");
-    token.value = data.value.token;
-    const user = useUser();
-    user.value = data.value;
-    navigateTo(route.query.from || "/", { replace: true });
+    message.success(type.value === "login" ? "登录成功" : "注册成功");
+    if (type.value === "login") {
+      const token = useCookie("token");
+      token.value = data.value.token;
+      const user = useUser();
+      user.value = data.value;
+      navigateTo(route.query.from || "/", { replace: true });
+    } else {
+      chageType();
+    }
   });
 };
 const chageType = () => {
@@ -140,7 +149,7 @@ const chageType = () => {
   route.meta.title = type.value === "login" ? "登录" : "注册";
   form.password = "";
   form.username = "";
-  form.respassword = "";
+  form.repassword = "";
   formRef.value.restoreValidation();
 };
 </script>

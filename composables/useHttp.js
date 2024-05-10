@@ -16,7 +16,6 @@ function useGetFetchOptions(options = {}) {
   if (token.value) {
     options.headers.token = token.value;
   }
-  console.log(options);
   return options;
 }
 
@@ -28,7 +27,6 @@ export async function useHttp(key, url, options = {}) {
     const error = ref(null);
     return await $fetch(url, options)
       .then((res) => {
-        console.log("res===>", res);
         data.value = res.data;
         return {
           data,
@@ -37,7 +35,6 @@ export async function useHttp(key, url, options = {}) {
       })
       .catch((err) => {
         const msg = err?.data?.data;
-        console.log("err===>", err);
         if (process.client) {
           const { message } = createDiscreteApi(["message"]);
           message.error(msg || "服务端错误");

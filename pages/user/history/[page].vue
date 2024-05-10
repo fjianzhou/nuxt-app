@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h5 class="text-lg my-10px">“{{ keyword }}”的搜索结果</h5>
     <UiTab>
       <UiTabItem
         :active="item.value === type"
@@ -11,15 +10,11 @@
         {{ item.label }}
       </UiTabItem>
     </UiTab>
-    <LoadingGroup :pending="pending" :error="error" :isEmpty="rows.length <= 0">
-      <template #loading>
-        <LoadingCourseSkeleton />
-      </template>
-      <n-grid :x-gap="20" :y-gap="5" :cols="4">
-        <n-gi v-for="item in rows" :key="item.id">
-          <IndexComponentsCardList :data="item"></IndexComponentsCardList>
-        </n-gi>
-      </n-grid>
+    <LoadingGroup :pending="pending" :error="error" :isEmpty="isEmpty">
+      <div class="p-3">
+        <UserHistoryList :key="item.id" v-for="item in rows" :data="item" />
+      </div>
+
       <div class="flex justify-center items-center mt-5 mb-10">
         <n-pagination
           size="large"
@@ -35,11 +30,10 @@
     </LoadingGroup>
   </div>
 </template>
+
 <script setup>
 import { NGrid, NGi, NPagination } from "naive-ui";
-definePageMeta({
-  middleware: ["search"],
-});
+useHead({ title: "学习记录" });
 const tab = [
   {
     label: "课程",
@@ -50,35 +44,35 @@ const tab = [
     value: "column",
   },
 ];
-const { keyword, type, page, rows, pageCount, pageSize, pending, error } =
-  await usePage((queryInfo) => {
-    return searchListApi(queryInfo);
-  });
-useHead({ title: keyword.value });
 const route = useRoute();
+const type = ref(route.query.tab || "course");
+const { page, rows, pageCount, pageSize, pending, error } = await usePage(
+  (queryInfo) => {
+    return searchHistoryListApi({ ...queryInfo, type });
+  }
+);
+
+const isEmpty = computed(() => rows.value.length <= 0);
 
 const updatePage = (page) => {
   navigateTo({
-    name: "search-type-page",
     params: { ...route.params, page },
-    query: { ...route.query, limit: pageSize.value },
+    query: { ...route.query, tab: type.value, limit: pageSize.value },
   });
 };
 
 const updatePageSize = (size) => {
   pageSize.value = size;
   navigateTo({
-    name: "search-type-page",
     params: { ...route.params },
-    query: { ...route.query, limit: size },
+    query: { ...route.query, tab: type.value, limit: size },
   });
 };
 
 const tabClick = (type) => {
   navigateTo({
-    name: "search-type-page",
-    params: { type, page: 1 },
-    query: { ...route.query, limit: pageSize.value },
+    params: { page: 1 },
+    query: { ...route.query, tab: type, limit: pageSize.value },
   });
 };
 </script>
