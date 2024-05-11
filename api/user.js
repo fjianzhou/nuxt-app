@@ -52,3 +52,19 @@ export function searchPostListApi(query) {
     query: query,
   });
 }
+
+export function searchCouponListApi(query) {
+  return useHttpGet("userCouponList", "/user_coupon", {
+    query: query,
+  });
+}
+
+export function searchFavaListApi(query) {
+  return useHttpGet("userFavaList", "/user_fava", {
+    query: query,
+  });
+}
+
+export function uncollectApi(body) {
+  return useHttpPost("uncollectApi", "/uncollect", { body, $: true });
+}

@@ -37,7 +37,6 @@ const { page, rows, pageCount, pageSize, pending, error, refresh } =
 const isEmpty = computed(() => rows.value.length <= 0);
 
 const handleDelete = async ({ id, success, fail }) => {
-  console.log("xxxx=>", id);
   const { error } = await deletePostApi(id);
   if (error.value) {
     fail();

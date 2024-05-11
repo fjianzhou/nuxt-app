@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { NGrid, NGi, NPagination } from "naive-ui";
+import { NPagination } from "naive-ui";
 useHead({ title: "购买记录" });
 
 const route = useRoute();

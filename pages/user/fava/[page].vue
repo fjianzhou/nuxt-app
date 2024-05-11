@@ -1,11 +1,12 @@
 <template>
   <LoadingGroup :pending="pending" :error="error" :isEmpty="isEmpty">
     <div class="p-3">
-      <n-grid :x-gap="20" :y-gap="20" :cols="2">
-        <n-gi v-for="item in rows" :key="item.id">
-          <UserCouponList :data="item" />
-        </n-gi>
-      </n-grid>
+      <UserFavaList
+        v-for="item in rows"
+        :data="item"
+        :key="item.id"
+        @deleteCollect="handleDelete"
+      />
     </div>
     <div class="flex justify-center items-center mt-5 mb-10">
       <n-pagination
@@ -23,18 +24,15 @@
 </template>
 
 <script setup>
-import { NGrid, NGi, NPagination } from "naive-ui";
-useHead({ title: "购买记录" });
-
-useHead({ title: "优惠卷记录" });
+import { NPagination } from "naive-ui";
+useHead({ title: "我的收藏" });
 
 const route = useRoute();
 const type = ref(route.query.tab || "course");
-const { page, rows, pageCount, pageSize, pending, error } = await usePage(
-  (queryInfo) => {
-    return searchCouponListApi({ ...queryInfo });
-  }
-);
+const { page, rows, pageCount, pageSize, pending, error, refresh } =
+  await usePage((queryInfo) => {
+    return searchFavaListApi({ ...queryInfo });
+  });
 
 const isEmpty = computed(() => rows.value.length <= 0);
 
@@ -51,5 +49,15 @@ const updatePageSize = (size) => {
     params: { ...route.params },
     query: { ...route.query, limit: size },
   });
+};
+
+const handleDelete = async ({ goods_id, type, success, fail }) => {
+  const { error } = await uncollectApi({ goods_id, type });
+  if (error.value) {
+    fail();
+  } else {
+    success();
+    refresh();
+  }
 };
 </script>
