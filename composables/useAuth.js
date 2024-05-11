@@ -46,3 +46,26 @@ export function useHasAuth(callback = null) {
     callback();
   }
 }
+
+export function useHandleSupportPost() {
+  const supportLoading = ref(false);
+  const handleSupport = (item) => {
+    useHasAuth(async () => {
+      let type = item.issupport ? "unsupport" : "support";
+      let msg = item.issupport ? "取消点赞" : "点赞";
+      supportLoading.value = true;
+      const { error } = await postSupportApi(item.id, type);
+      if (error.value) return;
+      if (type === "unsupport") {
+        item.support_count--;
+      } else {
+        item.support_count++;
+      }
+      item.issupport = !item.issupport;
+      const { message } = createDiscreteApi(["message"]);
+      message.success(`${msg}成功`);
+      supportLoading.value = false;
+    });
+  };
+  return { supportLoading, handleSupport };
+}

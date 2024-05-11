@@ -4,7 +4,7 @@ export async function usePage(getDateApiCallback) {
   const pageSize = ref(parseInt(route.query?.limit ?? 12));
   const type = ref(route.params.type);
   const page = ref(parseInt(route.params.page));
-  const { data, pending, error } = await getDateApiCallback({
+  const { data, pending, error, refresh } = await getDateApiCallback({
     type,
     page,
     keyword,
@@ -25,5 +25,15 @@ export async function usePage(getDateApiCallback) {
     }
   );
 
-  return { keyword, pageSize, type, page, rows, pageCount, pending, error };
+  return {
+    keyword,
+    pageSize,
+    type,
+    page,
+    rows,
+    pageCount,
+    pending,
+    error,
+    refresh,
+  };
 }

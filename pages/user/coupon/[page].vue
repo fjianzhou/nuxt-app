@@ -1,12 +1,7 @@
 <template>
   <LoadingGroup :pending="pending" :error="error" :isEmpty="isEmpty">
     <div class="p-3">
-      <PostList
-        v-for="item in rows"
-        :data="item"
-        :key="item.id"
-        @deletePost="handleDelete"
-      />
+      <UserBuyList v-for="item in rows" :data="item" :key="item.id" />
     </div>
     <div class="flex justify-center items-center mt-5 mb-10">
       <n-pagination
@@ -25,27 +20,17 @@
 
 <script setup>
 import { NGrid, NGi, NPagination } from "naive-ui";
-useHead({ title: "我的帖子" });
+useHead({ title: "购买记录" });
 
 const route = useRoute();
 const type = ref(route.query.tab || "course");
-const { page, rows, pageCount, pageSize, pending, error, refresh } =
-  await usePage((queryInfo) => {
-    return searchPostListApi({ ...queryInfo });
-  });
+const { page, rows, pageCount, pageSize, pending, error } = await usePage(
+  (queryInfo) => {
+    return searchBuyListApi({ ...queryInfo });
+  }
+);
 
 const isEmpty = computed(() => rows.value.length <= 0);
-
-const handleDelete = async ({ id, success, fail }) => {
-  console.log("xxxx=>", id);
-  const { error } = await deletePostApi(id);
-  if (error.value) {
-    fail();
-  } else {
-    success();
-    refresh();
-  }
-};
 
 const updatePage = (page) => {
   navigateTo({
