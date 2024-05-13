@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <template v-if="loading">
       <slot name="loading"> <LoadingSkeleton /></slot>
     </template>

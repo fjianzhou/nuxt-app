@@ -68,3 +68,22 @@ export function searchFavaListApi(query) {
 export function uncollectApi(body) {
   return useHttpPost("uncollectApi", "/uncollect", { body, $: true });
 }
+
+export function updateInfoApi(body) {
+  return useHttpPost("updateInfo", "/update_info", { body, $: true });
+}
+
+export function uploadConfig() {
+  const token = useCookie("token");
+  return {
+    action: `${fetchConfig.baseURL}/upload`,
+    headers: {
+      appid: fetchConfig.headers.appid,
+      token: token.value,
+    },
+  };
+}
+
+export function updatePasswordApi(body) {
+  return useHttpPost("updatePassword", "/update_password", { body, $: true });
+}
