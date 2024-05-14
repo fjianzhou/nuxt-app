@@ -1,7 +1,7 @@
 export async function usePage(getDateApiCallback) {
   const route = useRoute();
   const keyword = ref(route.query.keyword);
-  const pageSize = ref(parseInt(route.query?.limit ?? 12));
+  const pageSize = ref(parseInt(route.query?.limit ?? 4));
   const type = ref(route.params.type);
   const page = ref(parseInt(route.params.page));
   const { data, pending, error, refresh } = await getDateApiCallback({

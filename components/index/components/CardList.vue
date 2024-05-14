@@ -1,7 +1,7 @@
 <template>
   <n-card
     class="cursor-pointer mb-5 shadow-md border-0 rounded"
-    @click="$openUrl(data)"
+    @click="openCourse(data.id)"
     content-class="!pb-10px"
     footer-class="!p-0px"
   >
@@ -26,6 +26,7 @@
           倒计时
           <IndexComponentsCountDown :time="data.end_time" />
         </div>
+        m
       </div>
     </template>
   </n-card>
@@ -33,4 +34,7 @@
 <script setup>
 import { NCard } from "naive-ui";
 defineProps(["data"]);
+const openCourse = (id) => {
+  navigateTo(`/detail/course/${id}`);
+};
 </script>

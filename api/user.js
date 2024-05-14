@@ -69,6 +69,10 @@ export function uncollectApi(body) {
   return useHttpPost("uncollectApi", "/uncollect", { body, $: true });
 }
 
+export function collectApi(body) {
+  return useHttpPost("collectApi", "/collect", { body, $: true });
+}
+
 export function updateInfoApi(body) {
   return useHttpPost("updateInfo", "/update_info", { body, $: true });
 }
@@ -86,4 +90,15 @@ export function uploadConfig() {
 
 export function updatePasswordApi(body) {
   return useHttpPost("updatePassword", "/update_password", { body, $: true });
+}
+
+export function orderLearnApi(body) {
+  return useHttpPost("orderLearn", "/order/learn", { body, $: true });
+}
+
+export function userCouponReceiveApi(body) {
+  return useHttpPost("userCouponReceive", "user_coupon/receive", {
+    body,
+    $: true,
+  });
 }
