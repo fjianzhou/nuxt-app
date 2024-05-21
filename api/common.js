@@ -15,3 +15,9 @@ export function listApi(type, query) {
     query: query,
   });
 }
+
+export function readDetailApi(type, query) {
+  return useHttpGet(`${type}Read`, `/${type}/read`, {
+    query: query,
+  });
+}

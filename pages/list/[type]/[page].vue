@@ -7,11 +7,17 @@
 
     <LoadingGroup :pending="pending" :error="error" :isEmpty="rows.length <= 0">
       <template #loading>
-        <LoadingCourseSkeleton />
+        <LoadingBookSkeleton v-if="route.params.type === 'book'" />
+        <LoadingCourseSkeleton v-else />
       </template>
-      <n-grid :x-gap="20" :y-gap="5" :cols="4">
+      <n-grid
+        :x-gap="20"
+        :y-gap="5"
+        :cols="route.params.type === 'book' ? 2 : 4"
+      >
         <n-gi v-for="item in rows" :key="item.id">
-          <IndexComponentsCardList :data="item"></IndexComponentsCardList>
+          <Booklist :data="item" v-if="route.params.type === 'book'" />
+          <IndexComponentsCardList v-else :data="item" />
         </n-gi>
       </n-grid>
       <div class="flex justify-center items-center mt-5 mb-10">
@@ -37,12 +43,23 @@ import {
   NBreadcrumb,
   NBreadcrumbItem,
 } from "naive-ui";
-useHead({ title: "课程列表" });
+useHead({
+  title: "课程列表",
+  script: [
+    {
+      src: "//unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js",
+    },
+  ],
+});
 const route = useRoute();
 const { page, rows, pageCount, pageSize, pending, error } = await usePage(
   (queryInfo) => {
     const { page, limit } = queryInfo;
-    return listApi(route.params.type, { page, limit });
+    let query = { page, limit };
+    if (["group", "flashsale"].includes(route.params.type)) {
+      query.usable = 1;
+    }
+    return listApi(route.params.type, query);
   }
 );
 
