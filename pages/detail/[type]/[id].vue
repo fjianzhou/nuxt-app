@@ -1,5 +1,5 @@
 <template>
-  <LoadingGroup :pending="pending">
+  <LoadingGroup :pending="pending" :error="error">
     <section
       class="py-4"
       v-if="data.isbuy && data.type != '' && type == 'course'"
