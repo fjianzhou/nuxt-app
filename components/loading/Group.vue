@@ -33,7 +33,7 @@ const stop = watchEffect(() => {
   } else {
     setTimeout(() => {
       loading.value = false;
-    }, 1000);
+    }, 300);
   }
 });
 

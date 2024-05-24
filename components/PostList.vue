@@ -38,16 +38,16 @@
           </template>
           评论{{ data.comment_count || "" }}
         </n-button>
-
         <n-button text size="tiny">作者：{{ data.user.name }}</n-button>
-
         <n-button
+          v-if="showDel"
           type="error"
           size="tiny"
           :loading="deleteLoading"
           @click.stop="deletePost(data.id)"
-          >删除</n-button
         >
+          删除
+        </n-button>
       </n-space>
     </div>
   </div>
@@ -64,6 +64,10 @@ import {
 import { ThumbsUpSharp, ChatboxEllipsesOutline } from "@vicons/ionicons5";
 const props = defineProps({
   data: Object,
+  showDel: {
+    type: Boolean,
+    default: true,
+  },
 });
 const emit = defineEmits(["deletePost"]);
 const deleteLoading = ref(false);
