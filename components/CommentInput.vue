@@ -19,6 +19,9 @@
             >
               回复
             </n-button>
+            <n-button v-if="showCancel" size="small" @click="emit('cancel')">
+              取消
+            </n-button>
           </div>
         </n-form-item>
       </n-form>
@@ -31,8 +34,16 @@ import { NForm, NFormItem, NInput, NButton, createDiscreteApi } from "naive-ui";
 const form = reactive({
   content: "",
 });
-const props = defineProps(["post_id"]);
-const emit = defineEmits(["success"]);
+const props = defineProps({
+  post_id: String | Number,
+  showCancel: {
+    type: Boolean,
+    default: false,
+  },
+  reply_id: String | Number,
+  reply_user: Object,
+});
+const emit = defineEmits(["success", "cancel"]);
 const formRef = ref(null);
 
 const rules = {
@@ -51,9 +62,17 @@ const submit = () => {
         reply_id: 0,
       };
 
+      debugger;
+      if (props.reply_id != 0) {
+        d.reply_id = props.reply_id;
+        d.reply_user = { ...props.reply_user };
+      }
       const { data, error } = await postReplyApi(d);
       loading.value = false;
       if (error.value) return;
+      if (props.showCancel) {
+        emit("cancel");
+      }
       emit("success", data.value);
       const { message } = createDiscreteApi(["message"]);
       message.success("评论成功");

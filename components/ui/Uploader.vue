@@ -1,5 +1,5 @@
 <template>
-  <div calss="w-100%">
+  <div class="w-100%">
     <n-upload
       v-model:file-list="fileList"
       :action="action"
@@ -7,17 +7,25 @@
       :data="data"
       :headers="headers"
       list-type="image-card"
-      :max="1"
+      :max="max"
       @error="handleError"
       @finish="handleSuccess"
-      :multiple="false"
+      :multiple="max > 1"
       accept="image/png,image/jpeg,image/gif"
     />
   </div>
 </template>
 <script setup>
 import { NUpload, createDiscreteApi } from "naive-ui";
-const props = defineProps(["data", "modelValue"]);
+
+const props = defineProps({
+  data: Object,
+  modelValue: [String, Array],
+  max: {
+    type: Number,
+    default: 1,
+  },
+});
 const emit = defineEmits(["update:modelValue"]);
 const { action, headers } = uploadConfig();
 const fileList = ref([]);
@@ -33,16 +41,27 @@ const handleSuccess = (...e) => {
 };
 
 const initFileList = () => {
-  fileList.value = props.modelValue
-    ? [
-        {
-          id: props.modelValue,
-          name: props.modelValue,
-          status: "finished",
-          url: props.modelValue,
-        },
-      ]
-    : [];
+  if (typeof props.modelValue === "string") {
+    fileList.value = props.modelValue
+      ? [
+          {
+            id: props.modelValue,
+            name: props.modelValue,
+            status: "finished",
+            url: props.modelValue,
+          },
+        ]
+      : [];
+  } else {
+    fileList.value = props.modelValue.map((url) => {
+      return {
+        id: url,
+        name: url,
+        status: "finished",
+        url,
+      };
+    });
+  }
 };
 initFileList();
 
@@ -63,6 +82,6 @@ function updateModelValue() {
       urls.push(file.url);
     }
   });
-  emit("update:modelValue", urls[0] || "");
+  emit("update:modelValue", props.max === 1 ? urls[0] || "" : urls);
 }
 </script>

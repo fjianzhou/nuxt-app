@@ -17,13 +17,25 @@
         </n-tag>
         {{ data.content }}
       </p>
-      <n-button strong secondary size="small">回复</n-button>
+      <n-button strong secondary size="small" @click="openInput">
+        回复
+      </n-button>
+      <CommentInput
+        v-if="showInput"
+        :reply_id="data.reply_id ? data.reply_id : data.id"
+        :reply_user="reply_user"
+        :post_id="data.post_id"
+        :showCancel="true"
+        @cancel="cancel"
+        @success="emits('commentSuccess')"
+      />
       <n-divider />
       <template v-if="data?.post_comments">
         <CommentList
           v-for="item in data?.post_comments"
           :data="item"
           :key="item.id"
+          @commentSuccess="emits('commentSuccess')"
         />
       </template>
     </div>
@@ -33,7 +45,24 @@
 <script setup>
 defineOptions({ name: "CommentItem" });
 import { NAvatar, NButton, NDivider, NTime, NTag } from "naive-ui";
+const emits = defineEmits(["commentSuccess"]);
+const showInput = ref(false);
 const props = defineProps({
   data: Object,
+});
+const openInput = () => {
+  showInput.value = true;
+};
+
+const cancel = () => {
+  showInput.value = false;
+};
+
+const reply_user = computed(() => {
+  return {
+    id: props.data.user.id,
+    username: props.data.user.name,
+    avatar: props.data.user.avatar,
+  };
 });
 </script>

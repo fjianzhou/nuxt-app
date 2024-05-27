@@ -69,7 +69,9 @@
       </section>
     </n-grid-item>
     <n-grid-item :span="6">
-      <n-button type="primary" class="w-full m-b-5">发布帖子</n-button>
+      <NuxtLink to="/post/add">
+        <n-button type="primary" class="w-full m-b-5">发布帖子</n-button>
+      </NuxtLink>
       <HotCourseList />
     </n-grid-item>
   </n-grid>

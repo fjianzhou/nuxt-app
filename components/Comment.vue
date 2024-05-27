@@ -4,7 +4,12 @@
       <h4>精彩评论</h4>
     </div>
     <LoadingGroup :pending="pending" :error="error" :isEmpty="rows.length <= 0">
-      <CommentList v-for="item in rows" :key="item.id" :data="item" />
+      <CommentList
+        v-for="item in rows"
+        :key="item.id"
+        :data="item"
+        @commentSuccess="refresh"
+      />
       <div class="flex justify-center items-center mt-5 mb-10">
         <n-pagination
           size="large"

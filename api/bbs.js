@@ -27,9 +27,16 @@ export function postReadApi(query) {
 export function postCommentApi(query) {
   return useHttpGet("postComment", "/post_comment", { query });
 }
-
+ 
 export function postReplyApi(body) {
   return useHttpPost("postReply", "/post/reply", {
+    body,
+    $: true,  
+  });
+}
+
+export function addPostApi(body) {
+  return useHttpPost("addPost", "/post/save", {
     body,
     $: true,
   });
